@@ -5,7 +5,7 @@
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             Roles
         </h2>
-        @can('isAllowed', \App\Models\Module::byRouteName('roles'))
+        @can('isAllowed', \App\Models\Module::byRouteName('create.role'))
         <a href="/admin/roles/create" title="" class="bg-blue-500 text-sm px-4 py-2 rounded text-white">Create Role</a>
         @endcan
     </x-header>

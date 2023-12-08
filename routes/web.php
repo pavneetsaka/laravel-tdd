@@ -44,7 +44,7 @@ Route::prefix('admin')->group(function(){
         Route::get('/roles/create', [RoleController::class, 'create'])->name('create.role');
         Route::post('/roles', [RoleController::class, 'store'])->name('store.role');
         Route::get('/roles/{role}/edit', [RoleController::class, 'edit'])->name('edit.role');
-        Route::patch('/roles/{role}', [RoleController::class, 'update'])->name('update.store');
+        Route::patch('/roles/{role}', [RoleController::class, 'update'])->name('update.role');
         Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('delete.role');
 
         Route::get('/modules', [ModuleController::class, 'index'])->name('modules');

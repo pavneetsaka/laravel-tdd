@@ -37,11 +37,22 @@ class ModuleController extends Controller
         $this->allowedAcitvity();
 
         $attributes = request()->validate([
-            'name' => 'required|unique:modules,name',
+            'name' => 'required',
             'parent_id' => 'sometimes',
             'slug' => '',
             'route_uri' => 'required'
         ]);
+
+        //Additonal validation to avoid duplicate module name wrt parent_id
+        $where = "parent_id IS NULL";
+        if($attributes['parent_id'] == "true")
+        {
+            $where = "parent_id = {$attributes['parent_id']}";
+        }
+        $validateName = Module::where('name', $attributes['name'])->whereRaw($where)->first();
+        if($validateName){
+            return redirect()->back()->withErrors(['name' => 'The name has already been taken.']);
+        }
 
         Module::create($attributes);
 

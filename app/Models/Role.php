@@ -10,7 +10,9 @@ class Role extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = ['name','is_admin','is_active'];
+
+    protected $with = ['access'];
 
     protected $casts = [
         'is_admin' => 'boolean',

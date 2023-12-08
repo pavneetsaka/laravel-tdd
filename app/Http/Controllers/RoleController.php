@@ -28,9 +28,9 @@ class RoleController extends Controller
         // $this->authorize('manage', User::class);
         $this->allowedAcitvity();
 
-        Module::where('is_active', true)->get();
+        $modules = Module::where(['is_active' => true,'parent_id' => NULL])->with('children')->get();
 
-        return view('admin.roles.create');
+        return view('admin.roles.create', compact('modules'));
     }
 
     public function store()
@@ -38,12 +38,13 @@ class RoleController extends Controller
         // $this->authorize('manage', User::class);
         $this->allowedAcitvity();
 
-        $attributes = $this->validateFields();
-
-        $role = Role::create([
-            'name' => $attributes['name'],
-            'is_admin' => $attributes['is_admin']
+        $attributes = request()->validate([
+            'name' => 'required|unique:roles,name',
+            'is_admin' => 'required',
+            'modules' => 'sometimes|required|array'
         ]);
+
+        $role = Role::create($attributes);
 
         if(isset($attributes['modules']) && !empty($attributes['modules'])){
             $role->assign($attributes['modules']);
@@ -57,7 +58,9 @@ class RoleController extends Controller
         // $this->authorize('manage', User::class);
         $this->allowedAcitvity();
 
-        return view('admin.roles.edit', compact('role'));
+        $modules = Module::where(['is_active' => true,'parent_id' => NULL])->with('children')->get();
+
+        return view('admin.roles.edit', compact('role','modules'));
     }
 
     public function update(Role $role)
@@ -65,7 +68,11 @@ class RoleController extends Controller
         // $this->authorize('manage', User::class);
         $this->allowedAcitvity();
 
-        $attributes = $this->validateFields();
+        $attributes = request()->validate([
+            'name' => 'required',
+            'is_admin' => 'required',
+            'modules' => 'sometimes|required|array'
+        ]);
 
         $role->update($attributes);
 
@@ -85,14 +92,5 @@ class RoleController extends Controller
         $role->save();
 
         return redirect('/admin/roles');
-    }
-
-    protected function validateFields()
-    {
-        return request()->validate([
-            'name' => 'required|unique:roles,name',
-            'is_admin' => 'required',
-            'modules' => 'sometimes|required|array'
-        ]);
     }
 }
