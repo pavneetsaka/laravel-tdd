@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Models\Module;
 use Illuminate\Http\Request;
 use App\Traits\ModuleAccessibility;
 use Illuminate\Support\Facades\Auth;
@@ -17,8 +18,13 @@ class UserController extends Controller
         // $this->authorize('manage', User::class);
         $this->allowedAcitvity();
 
+        $canEditUsers = request()->user()->can('isAllowed', Module::byRouteName('edit.user'));
+        $canDeleteUsers = request()->user()->can('isAllowed', Module::byRouteName('delete.user'));
+
         return view('admin.users.index', [
-            'users' => User::with('role')->get()
+            'users' => User::with('role')->get(),
+            'canEditUsers' => $canEditUsers,
+            'canDeleteUsers' => $canDeleteUsers
         ]);
     }
 

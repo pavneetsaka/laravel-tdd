@@ -35,17 +35,17 @@
                         <td class="{{ $tdClass }}">{{ $key+1 }}</td>
                         <td class="{{ $tdClass }}">{{ $module->name }}</td>
                         <td class="{{ $tdClass }} flex justify-center">
-                            @can('isAllowed', \App\Models\Module::byRouteName('edit.module'))
+                            @if(isset($canEditModules) && $canEditModules)
                             <a href="/admin/modules/{{ $module->id }}/edit"  class="bg-blue-500 hover:bg-blue-600 px-4 py-2 text-sm rounded text-white" title="">Edit</a>
-                            @endcan
+                            @endif
                             &nbsp;&nbsp;
-                            @can('isAllowed', \App\Models\Module::byRouteName('delete.module'))
+                            @if(isset($canDeleteModules) && $canDeleteModules)
                             <form action="/admin/modules/{{ $module->id }}" method="POST" accept-charset="utf-8">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="bg-red-500 hover:bg-red-600 text-sm px-4 py-2 rounded text-white">Delete</button>
                             </form>
-                            @endcan
+                            @endif
                         </td>
                     </tr>
                     @empty

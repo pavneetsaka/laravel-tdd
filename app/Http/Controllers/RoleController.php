@@ -18,9 +18,12 @@ class RoleController extends Controller
         // $this->authorize('manage', User::class);
         $this->allowedAcitvity();
 
+        $canEditRoles = request()->user()->can('isAllowed', Module::byRouteName('edit.role'));
+        $canDeleteRoles = request()->user()->can('isAllowed', Module::byRouteName('delete.role'));
+
         $roles = Role::where('is_active', true)->get();
 
-        return view('admin.roles.index', compact('roles'));
+        return view('admin.roles.index', compact('roles','canEditRoles','canDeleteRoles'));
     }
 
     public function create()

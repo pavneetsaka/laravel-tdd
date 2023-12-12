@@ -16,9 +16,12 @@ class ModuleController extends Controller
         // $this->authorize('manage', User::class);
         $this->allowedAcitvity();
 
+        $canEditModules = request()->user()->can('isAllowed', Module::byRouteName('edit.module'));
+        $canDeleteModules = request()->user()->can('isAllowed', Module::byRouteName('delete.module'));
+
         $modules = Module::where(['is_active' => true, 'parent_id' => null])->with('children')->get();
 
-        return view('admin.module.index', compact('modules'));
+        return view('admin.module.index', compact('modules', 'canEditModules', 'canDeleteModules'));
     }
 
     public function create()
